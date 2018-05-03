@@ -154,9 +154,13 @@ describe('Testiong REST API endpoints', function () {
       BlogPost.findOne({})
         .then((blogPost) => {
           toBeDeletedBlog = blogPost;
-          return BlogPost.findByIdAndRemove(toBeDeletedBlog._id)
+          return chai.request(app)
+            .delete(`/posts/${toBeDeletedBlog._id}`)
         }).then((removedBlogPost) => {
-          expect(removedBlogPost).to.equal(null)
+          expect(removedBlogPost).to.have.status(204);
+          expect(removedBlogPost.body).to.deep.equal({})
+        }).catch((e) => {
+          console.error(e)
         })
 
     })
